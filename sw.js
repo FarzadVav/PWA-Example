@@ -1,14 +1,14 @@
-const CACHE_NAME = "pwa-counter.v2"
+const CACHE_NAME = "pwa-counter.v4"
 const ASSETS = [
   "/",
   "/index.html",
-  "/src/style.css",
-  "/src/main.js",
-  "/src/scripts/install.js",
-  "/src/scripts/counter.js",
-  "/src/scripts/posts.js",
-  "/public/icon-48x48.png",
-  "/public/web.gif",
+  "style.css",
+  "main.js",
+  "install.js",
+  "counter.js",
+  "posts.js",
+  "icon-48x48.png",
+  "web.gif",
 ]
 
 // installing
