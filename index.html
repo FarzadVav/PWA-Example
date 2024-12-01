@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#303030">
+
+  <link rel="icon" type="image/svg+xml" href="/public/icon-48x48.png" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="/src/style.css">
+
+  <title>PWA Counter</title>
+</head>
+
+<body>
+
+  <div class="header">
+    <a class="header_link" href="/">Home</a>
+    <button id="fetch-posts" class="btn">Fetch posts</button>
+    <button id="install" class="btn">Install 💥</button>
+  </div>
+
+  <div class="container">
+    <img class="home-gif" src="/public/web.gif" alt="pwa web gif">
+
+    <h1>Count game</h1>
+    <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Libero molestias sequi repellat dolore excepturi cum
+      architecto saepe quod neque assumenda. Earum sequi quidem natus sed?</p>
+    <button class="btn counter">
+      <span>count:</span>
+      <span class="count">0</span>
+    </button>
+  </div>
+
+  <div id="posts-wrapper" class="container"></div>
+
+  <script type="module" src="/src/main.js"></script>
+  <script type="module" src="/src/scripts/install.js"></script>
+  <script type="module" src="/src/scripts/counter.js"></script>
+  <script type="module" src="/src/scripts/posts.js"></script>
+</body>
+
+</html>
