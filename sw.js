@@ -1,7 +1,8 @@
-const CACHE_NAME = "pwa-counter.v4"
+const CACHE_NAME = "cache-v5"
+const DYNAMIC_CACHE_NAME = "dynamic-cache-v1"
 const ASSETS = [
   "/",
-  "/index.html",
+  "index.html",
   "style.css",
   "main.js",
   "install.js",
@@ -31,15 +32,31 @@ self.addEventListener("activate", (ev) => {
 })
 
 // fetching
-const cacheFirst = async (request) => {
-  const cacheResponse = await caches.match(request)
+// const cacheFirst = async (request) => {
+//   const cacheResponse = await caches.match(request)
 
-  if (cacheResponse) {
-    return cacheResponse
-  }
+//   if (cacheResponse) {
+//     return cacheResponse
+//   }
 
-  return fetch(request)
-}
+//   return fetch(request)
+// }
+// self.addEventListener("fetch", (ev) => {
+//   ev.respondWith(cacheFirst(ev.request))
+// })
+
 self.addEventListener("fetch", (ev) => {
-  ev.respondWith(cacheFirst(ev.request))
+  ev.respondWith(
+    caches.match(ev.request).then((cacheRes) => {
+      return (
+        cacheRes ||
+        fetch(ev.request).then((fetchRes) => {
+          return caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
+            cache.put(ev.request.url, fetchRes)
+            return fetchRes
+          })
+        })
+      )
+    })
+  )
 })
