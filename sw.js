@@ -1,5 +1,5 @@
-const CACHE_NAME = "cache-v9"
-const DYNAMIC_CACHE_NAME = "dynamic-cache-v5"
+const CACHE_NAME = "cache-v10"
+const DYNAMIC_CACHE_NAME = "dynamic-cache-v6"
 const ASSETS = [
   "/",
   "index.html",
@@ -32,6 +32,13 @@ self.addEventListener("activate", (ev) => {
   ev.waitUntil(deleteOldCaches())
 })
 
+const limitCacheSize = async (name) => {
+  const openedCache = await caches.open(name)
+  const cacheKeys = await openedCache.keys()
+  if (cacheKeys.length > 2) {
+    openedCache.delete(cacheKeys[0]).then(() => limitCacheSize(name))
+  }
+}
 self.addEventListener("fetch", (ev) => {
   ev.respondWith(
     caches
@@ -42,6 +49,7 @@ self.addEventListener("fetch", (ev) => {
           fetch(ev.request).then((fetchRes) => {
             return caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
               cache.put(ev.request.url, fetchRes)
+              limitCacheSize(DYNAMIC_CACHE_NAME)
               return fetchRes
             })
           })
