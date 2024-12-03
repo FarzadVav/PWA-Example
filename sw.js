@@ -1,8 +1,9 @@
-const CACHE_NAME = "cache-v5"
-const DYNAMIC_CACHE_NAME = "dynamic-cache-v1"
+const CACHE_NAME = "cache-v7"
+const DYNAMIC_CACHE_NAME = "dynamic-cache-v3"
 const ASSETS = [
   "/",
   "index.html",
+  "fallback.html",
   "style.css",
   "main.js",
   "install.js",
@@ -24,7 +25,7 @@ self.addEventListener("install", (ev) => {
 // activating
 const deleteOldCaches = async () => {
   const keyList = await caches.keys()
-  const cachesToDelete = keyList.filter((key) => key !== CACHE_NAME)
+  const cachesToDelete = keyList.filter((key) => key !== CACHE_NAME && key !== DYNAMIC_CACHE_NAME)
   await Promise.all(cachesToDelete.map((key) => caches.delete(key)))
 }
 self.addEventListener("activate", (ev) => {
@@ -47,16 +48,19 @@ self.addEventListener("activate", (ev) => {
 
 self.addEventListener("fetch", (ev) => {
   ev.respondWith(
-    caches.match(ev.request).then((cacheRes) => {
-      return (
-        cacheRes ||
-        fetch(ev.request).then((fetchRes) => {
-          return caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
-            cache.put(ev.request.url, fetchRes)
-            return fetchRes
+    caches
+      .match(ev.request)
+      .then((cacheRes) => {
+        return (
+          cacheRes ||
+          fetch(ev.request).then((fetchRes) => {
+            return caches.open(DYNAMIC_CACHE_NAME).then((cache) => {
+              cache.put(ev.request.url, fetchRes)
+              return fetchRes
+            })
           })
-        })
-      )
-    })
+        )
+      })
+      .catch(() => caches.match("fallback.html"))
   )
 })
