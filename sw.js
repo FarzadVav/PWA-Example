@@ -1,5 +1,5 @@
-const CACHE_NAME = "cache-v7"
-const DYNAMIC_CACHE_NAME = "dynamic-cache-v3"
+const CACHE_NAME = "cache-v9"
+const DYNAMIC_CACHE_NAME = "dynamic-cache-v5"
 const ASSETS = [
   "/",
   "index.html",
@@ -32,20 +32,6 @@ self.addEventListener("activate", (ev) => {
   ev.waitUntil(deleteOldCaches())
 })
 
-// fetching
-// const cacheFirst = async (request) => {
-//   const cacheResponse = await caches.match(request)
-
-//   if (cacheResponse) {
-//     return cacheResponse
-//   }
-
-//   return fetch(request)
-// }
-// self.addEventListener("fetch", (ev) => {
-//   ev.respondWith(cacheFirst(ev.request))
-// })
-
 self.addEventListener("fetch", (ev) => {
   ev.respondWith(
     caches
@@ -61,6 +47,10 @@ self.addEventListener("fetch", (ev) => {
           })
         )
       })
-      .catch(() => caches.match("fallback.html"))
+      .catch(() => {
+        if (ev.request.url.includes(".html")) {
+          return caches.match("fallback.html")
+        }
+      })
   )
 })
